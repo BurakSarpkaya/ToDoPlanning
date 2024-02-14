@@ -11,8 +11,10 @@ Projenin Çalıştırılması
 - Mvc link -> https://localhost:7179/
 
 Api'den dönen response : 
+
 ![image](https://github.com/BurakSarpkaya/ToDoPlanning/assets/56655317/87ed17dd-ef1c-4a13-a520-e85eb78c83f3)
 
 Home Ekranı : 
+
 ![image](https://github.com/BurakSarpkaya/ToDoPlanning/assets/56655317/ee34635c-8a85-4938-9d0f-31a7409c0be2)
 
