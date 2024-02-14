@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ToDoPlanning.Api.CQRS.Queries.Request;
 using ToDoPlanning.Api.CQRS.Queries.Response;
@@ -20,13 +19,7 @@ namespace ToDoPlanning.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetDeveloperPlan()
         {
-            //GetDeveloperPlanQueryRequest getListDeveloperQuery = new GetDeveloperPlanQueryRequest()
-            //{
-            //    ProviderId = providerId
-            //};
-
             GetDeveloperPlanQueryRequest getListDeveloperQuery = new GetDeveloperPlanQueryRequest();
-           
 
             List<GetDeveloperPlanQueryResponse> response = await _mediator.Send(getListDeveloperQuery);
             return Ok(response);
