@@ -6,6 +6,6 @@ namespace ToDoPlanning.Api.CQRS.Queries.Response
     {
         public int TotalWeek { get; set; }
         public DeveloperDto Developer { get; set; }
-        public List<TaskDto> Tasks { get; set; }
+        public List<WeeklyTaskDto> WeeklyTasks { get; set; }
     }
 }

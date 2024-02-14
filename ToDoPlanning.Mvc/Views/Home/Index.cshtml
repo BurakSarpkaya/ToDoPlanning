@@ -1,30 +1,47 @@
 ﻿@model List<DeveloperViewModel>
 
-<h2>Developer List</h2>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Developer Plan</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+<body>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Developer Name</th>
-            <th>Developer Level</th>
-            <th>Total Week</th>
-            <th>Tasks</th>
-        </tr>
-    </thead>
-    <tbody>
+    <div class="container mt-5">
+        <h1 class="mb-4">Developer Plan</h1>
+
         @foreach (var developer in Model)
         {
-            <tr>
-                <td>@developer.Developer.Name</td>
-                <td>@developer.Developer.Level</td>
-                <td>@developer.TotalWeek</td>
-                <td>
-                    @foreach (var task in developer.Tasks)
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h2>@developer.Developer.Name - Level: @developer.Developer.Level</h2>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Total Weeks: @developer.TotalWeek</p>
+
+                    @foreach (var weeklyTask in developer.WeeklyTasks)
                     {
-                        <div>@task.Name - Duration: @task.Duration, Level: @task.Level</div>
+                        <div class="card mb-3">
+                            <div class="card-header">
+                                <h3>Week @weeklyTask.WeekNumber</h3>
+                            </div>
+                            <div class="card-body">
+                                @foreach (var task in weeklyTask.Tasks)
+                                {
+                                    <p class="card-text">
+                                        Task: @task.Name - Duration: @task.Duration hours - Level: @task.Level
+                                    </p>
+                                }
+                            </div>
+                        </div>
                     }
-                </td>
-            </tr>
+                </div>
+            </div>
+
+            <hr />
         }
-    </tbody>
-</table>
+    </div>
+
+</body>
+</html>

@@ -30,20 +30,32 @@ namespace ToDoPlanning.Api.CQRS.Handlers.QueryHandler
             var taskList = await _context.Tasks.Find(new BsonDocument()).ToListAsync();
             var tasks = _mapper.Map<List<TaskDto>>(taskList);
 
-            var result = AssignTasksGreedy(developers, tasks);
+            var result = AssignTasks(developers, tasks);
 
             foreach (var entry in result)
             {
                 var response = new GetDeveloperPlanQueryResponse
                 {
                     Developer = entry.Key,
-                    Tasks = entry.Value
+                    WeeklyTasks = new List<WeeklyTaskDto>()
                 };
 
-                // Calculate the total weeks for the developer's tasks
                 int totalDuration = entry.Value.Sum(task => task.Duration);
                 int weeksToComplete = CalculateWeeks(totalDuration, response.Developer.Level);
                 response.TotalWeek = weeksToComplete;
+
+                for (int week = 1; week <= weeksToComplete; week++)
+                {
+                    var weeklyTasks = entry.Value
+                        .Where(task => task.Week == week)
+                        .ToList();
+
+                    response.WeeklyTasks.Add(new WeeklyTaskDto
+                    {
+                        WeekNumber = week,
+                        Tasks = weeklyTasks
+                    });
+                }
 
                 assignTasksGreedy.Add(response);
             }
@@ -51,11 +63,10 @@ namespace ToDoPlanning.Api.CQRS.Handlers.QueryHandler
             return assignTasksGreedy;
         }
 
-        private Dictionary<DeveloperDto, List<TaskDto>> AssignTasksGreedy(List<DeveloperDto> developers, List<TaskDto> tasks)
+        private Dictionary<DeveloperDto, List<TaskDto>> AssignTasks(List<DeveloperDto> developers, List<TaskDto> tasks)
         {
             var weeklyAssignments = new Dictionary<DeveloperDto, List<TaskDto>>();
 
-            // Developer'ları saatlik kapasitelerine göre sırala (en fazla işi yapabilen ilk sırada olacak)
             developers.Sort((dev1, dev2) => dev2.Level.CompareTo(dev1.Level));
 
             foreach (var developer in developers)
@@ -63,23 +74,32 @@ namespace ToDoPlanning.Api.CQRS.Handlers.QueryHandler
                 weeklyAssignments.Add(developer, new List<TaskDto>());
             }
 
-            // Görevleri zorluk derecesine göre sırala
             tasks.Sort((t1, t2) => t2.Level.CompareTo(t1.Level));
+
+            int weekCounter = 1;
 
             while (tasks.Count > 0)
             {
-                // Developer'ın saatlik kapasitesi kadar işi yapacak şekilde görevleri ata
+                bool taskAssigned = false;
+
                 foreach (var developer in developers)
                 {
                     var availableHours = developer.Level * 45;
 
-                    var task = tasks.Find(t => t.Duration <= availableHours);
+                    var task = tasks.FirstOrDefault(t => t.Duration <= availableHours);
+
                     if (task != null)
                     {
+                        task.Week = weekCounter; 
                         weeklyAssignments[developer].Add(task);
                         tasks.Remove(task);
-                        availableHours -= task.Duration;
+                        taskAssigned = true;
                     }
+                }
+
+                if (!taskAssigned)
+                {
+                    weekCounter++;
                 }
             }
 
