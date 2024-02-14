@@ -9,9 +9,9 @@
             _currentProviderService = currentProviderService;
         }
 
-        public async Task ExecuteStrategy()
+        public void ExecuteStrategy()
         {
-            await _currentProviderService.InsertProjectData();
+           _currentProviderService.InsertProjectData().Wait();
         }
     }
 }
