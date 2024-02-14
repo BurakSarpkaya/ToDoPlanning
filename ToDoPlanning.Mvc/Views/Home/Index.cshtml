@@ -1,0 +1,30 @@
+﻿@model List<DeveloperViewModel>
+
+<h2>Developer List</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Developer Name</th>
+            <th>Developer Level</th>
+            <th>Total Week</th>
+            <th>Tasks</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var developer in Model)
+        {
+            <tr>
+                <td>@developer.Developer.Name</td>
+                <td>@developer.Developer.Level</td>
+                <td>@developer.TotalWeek</td>
+                <td>
+                    @foreach (var task in developer.Tasks)
+                    {
+                        <div>@task.Name - Duration: @task.Duration, Level: @task.Level</div>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

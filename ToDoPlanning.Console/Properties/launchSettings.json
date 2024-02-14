@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "ToDoPlanning.Console": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}
