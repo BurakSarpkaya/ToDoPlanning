@@ -4,7 +4,7 @@ using ToDoPlanning.Console.Provider;
 
 class Program
 {
-    static void Main()
+    static async Task Main()
     {
         var serviceProvider = new ServiceCollection()
     .AddSingleton<MongoDBContext>()
@@ -14,15 +14,14 @@ class Program
     .AddScoped<ProviderServiceV3>() 
     .BuildServiceProvider();
 
-        ProviderStrategy providerStrategy;
+        await ToDoPlanningClient(serviceProvider.GetRequiredService<ProviderServiceV1>());
+        await ToDoPlanningClient(serviceProvider.GetRequiredService<ProviderServiceV2>());
+        await ToDoPlanningClient(serviceProvider.GetRequiredService<ProviderServiceV3>());
+    }
 
-        providerStrategy = new ProviderStrategy(serviceProvider.GetRequiredService<ProviderServiceV1>());
-        providerStrategy.ExecuteStrategy();
-
-        providerStrategy = new ProviderStrategy(serviceProvider.GetRequiredService<ProviderServiceV2>());
-        providerStrategy.ExecuteStrategy();
-
-        providerStrategy = new ProviderStrategy(serviceProvider.GetRequiredService<ProviderServiceV3>());
-        providerStrategy.ExecuteStrategy();
+    static async Task ToDoPlanningClient(IProviderService providerService)
+    {
+        var providerStrategy = new ProviderStrategy(providerService);
+        await providerStrategy.ExecuteStrategy();
     }
 }
