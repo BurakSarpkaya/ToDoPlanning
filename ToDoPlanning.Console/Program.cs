@@ -14,9 +14,10 @@ class Program
     .AddScoped<ProviderServiceV3>() 
     .BuildServiceProvider();
 
-        await ToDoPlanningClient(serviceProvider.GetRequiredService<ProviderServiceV1>());
-        await ToDoPlanningClient(serviceProvider.GetRequiredService<ProviderServiceV2>());
-        await ToDoPlanningClient(serviceProvider.GetRequiredService<ProviderServiceV3>());
+        var task1 = ToDoPlanningClient(serviceProvider.GetRequiredService<ProviderServiceV1>());
+        var task2 = ToDoPlanningClient(serviceProvider.GetRequiredService<ProviderServiceV2>());
+        var task3 = ToDoPlanningClient(serviceProvider.GetRequiredService<ProviderServiceV3>());
+        Task.WaitAll(task1,task2,task3);
     }
 
     static async Task ToDoPlanningClient(IProviderService providerService)
