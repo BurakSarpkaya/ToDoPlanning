@@ -24,7 +24,9 @@ namespace ToDoPlanning.Api.CQRS.Handlers.QueryHandler
         {
             List<GetDeveloperPlanQueryResponse> assignTasksGreedy = new List<GetDeveloperPlanQueryResponse>();
 
+            //var developerList = await (await _context.Developers.FindAsync(Builders<Developers>.Filter.Empty)).ToListAsync();
             var developerList = await _context.Developers.Find(new BsonDocument()).ToListAsync();
+
             var developers = _mapper.Map<List<DeveloperDto>>(developerList);
 
             var taskList = await _context.Tasks.Find(new BsonDocument()).ToListAsync();
